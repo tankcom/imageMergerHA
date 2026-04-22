@@ -15,6 +15,7 @@ import logging
 import os
 import re
 
+from PIL import Image
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, ServiceCall
 
@@ -50,7 +51,6 @@ def _resolve_path(hass, p):
     return os.path.join(hass.config.path(), "www", p)
 
 def _process_images(hass, data):
-    from PIL import Image
     try:
         src1 = _resolve_path(hass, data.get("source1", "1.jpg"))
         src2 = _resolve_path(hass, data.get("source2", "2.jpg"))
