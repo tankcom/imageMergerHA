@@ -79,17 +79,21 @@ def _process_images(hass, data):
         _LOGGER.exception("crop_merge: Fehler beim Verarbeiten der Bilder")
 
 
-def _handle_service(call: ServiceCall, hass: HomeAssistant) -> None:
-    hass.async_add_executor_job(_process_images, hass, call.data)
+async def _handle_service(call: ServiceCall, hass: HomeAssistant) -> None:
+    await hass.async_add_executor_job(_process_images, hass, call.data)
 
 
 def _register_services(hass: HomeAssistant) -> None:
     if hass.services.has_service(DOMAIN, SERVICE_CROP_AND_MERGE):
         return
+
+    async def handle(call: ServiceCall) -> None:
+        await _handle_service(call, hass)
+
     hass.services.async_register(
         DOMAIN,
         SERVICE_CROP_AND_MERGE,
-        lambda call: _handle_service(call, hass),
+        handle,
     )
 
 
