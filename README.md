@@ -11,16 +11,3 @@ A Home Assistant custom integration for merging and cropping images.
 5. Suche nach "Crop Merge" und installiere die Integration.
 6. Starte Home Assistant neu.
 
-## Konfiguration
-
-Füge folgendes zu deiner `configuration.yaml` hinzu:
-
-```yaml
-crop_merge:
-```
-
-Weitere Konfigurationsoptionen findest du in der Dokumentation.
-
-## Fehler melden
-
-Bitte Fehler und Feature-Wünsche im [Issue Tracker](https://github.com/USERNAME/imageMergerHA/issues) melden.
