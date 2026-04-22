@@ -5,6 +5,8 @@ Service data (optional):
   source2: '2.jpg'
   crop1: '600x400+0+0'     # format WxH+X+Y
   crop2: '600x400+0+0'
+  scale1: 1.0              # scaling factor for image1 (e.g. 0.5 for 50%, 2.0 for 200%)
+  scale2: 1.0              # scaling factor for image2
   output: '3.jpg'          # saved to config/www/output
   mode: 'horizontal'       # or 'vertical'
   quality: 85
@@ -30,6 +32,16 @@ def _parse_crop(crop_str):
     x = int(m.group("x")); y = int(m.group("y"))
     w = int(m.group("w")); h = int(m.group("h"))
     return (x, y, x + w, y + h)
+
+def _scale_image(image, scale_factor):
+    """Scale an image by the given factor (1.0 = original size, 0.5 = 50%, 2.0 = 200%)."""
+    if scale_factor <= 0:
+        raise ValueError("Scale factor must be greater than 0")
+    if scale_factor == 1.0:
+        return image
+    new_width = int(image.width * scale_factor)
+    new_height = int(image.height * scale_factor)
+    return image.resize((new_width, new_height), Image.Resampling.LANCZOS)
 
 def _resolve_path(hass, p):
     if os.path.isabs(p):
@@ -58,6 +70,14 @@ def _process_images(hass, data):
             img1 = img1.crop(_parse_crop(data["crop1"]))
         if data.get("crop2"):
             img2 = img2.crop(_parse_crop(data["crop2"]))
+
+        # Apply scaling factors
+        scale1 = float(data.get("scale1", 1.0))
+        scale2 = float(data.get("scale2", 1.0))
+        if scale1 != 1.0:
+            img1 = _scale_image(img1, scale1)
+        if scale2 != 1.0:
+            img2 = _scale_image(img2, scale2)
 
         if mode == "vertical":
             new_w = max(img1.width, img2.width)
