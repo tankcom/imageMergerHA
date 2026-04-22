@@ -4,5 +4,6 @@
   "version": "1.0.0",
   "requirements": ["Pillow>=9.0.0"],
   "dependencies": [],
-  "codeowners": []
+  "codeowners": [],
+  "config_flow": true
 }
