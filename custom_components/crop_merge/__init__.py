@@ -13,18 +13,13 @@ import logging
 import os
 import re
 
-from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.helpers.typing import HomeAssistantType
+from homeassistant.core import HomeAssistant, ServiceCall
 
 _LOGGER = logging.getLogger(__name__)
+
 from .const import DOMAIN
-async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry):
-    """Set up Crop Merge from a config entry (UI)."""
-    def handle(call: ServiceCall):
-        hass.async_add_executor_job(_process_images, hass, call.data)
-    hass.services.async_register(DOMAIN, "crop_and_merge", handle)
-    return True
+SERVICE_CROP_AND_MERGE = "crop_and_merge"
 
 def _parse_crop(crop_str):
     if not crop_str:
@@ -83,9 +78,32 @@ def _process_images(hass, data):
     except Exception:
         _LOGGER.exception("crop_merge: Fehler beim Verarbeiten der Bilder")
 
-async def async_setup(hass: HomeAssistant, config):
-    def handle(call: ServiceCall):
-        hass.async_add_executor_job(_process_images, hass, call.data)
 
-    hass.services.async_register(DOMAIN, "crop_and_merge", handle)
+def _handle_service(call: ServiceCall, hass: HomeAssistant) -> None:
+    hass.async_add_executor_job(_process_images, hass, call.data)
+
+
+def _register_services(hass: HomeAssistant) -> None:
+    if hass.services.has_service(DOMAIN, SERVICE_CROP_AND_MERGE):
+        return
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_CROP_AND_MERGE,
+        lambda call: _handle_service(call, hass),
+    )
+
+
+async def async_setup(hass: HomeAssistant, config):
+    _register_services(hass)
+    return True
+
+
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
+    """Set up Crop Merge from a config entry (UI)."""
+    _register_services(hass)
+    return True
+
+
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
+    # Service is global; keep it available while Home Assistant is running.
     return True
