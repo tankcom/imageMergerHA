@@ -1,0 +1,10 @@
+# Crop Merge
+
+include:
+  - custom_components/crop_merge/*
+  - README.md
+  - LICENSE
+  - .hacs/default.yaml
+  - custom_components/crop_merge/manifest.json
+  - custom_components/crop_merge/hacs.json
+  - custom_components/crop_merge/CONTRIBUTORS.txt

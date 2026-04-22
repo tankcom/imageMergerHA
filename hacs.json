@@ -1,0 +1,11 @@
+{
+  "name": "Crop Merge",
+  "description": "A Home Assistant custom integration for merging and cropping images.",
+  "domain": "crop_merge",
+  "documentation": "https://github.com/tankcom/imageMergerHA",
+  "issue_tracker": "https://github.com/tankcom/imageMergerHA/issues",
+  "dependencies": [],
+  "codeowners": ["@tankcom"],
+  "requirements": [],
+  "version": "1.0.0"
+}

@@ -1,0 +1,8 @@
+{
+  "domain": "crop_merge",
+  "name": "Crop & Merge Image Service",
+  "version": "1.0.0",
+  "requirements": ["Pillow>=9.0.0"],
+  "dependencies": [],
+  "codeowners": []
+}
